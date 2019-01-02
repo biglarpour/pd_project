@@ -8,8 +8,9 @@ from todo.models import Todos, TodoStatusTypes
 class TestIndex(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user("email@email.com", "email@email.com", "MyV0!c3Is")
-        self.todo = Todos(user=self.user, status=TodoStatusTypes.objects.get_or_create(status_name='new')[0],
+        self.user1 = User.objects.create_user("email@email.com", "email@email.com", "MyV0!c3Is")
+        self.user2 = User.objects.create_user("email2@email.com", "email2@email.com", "MyV0!c3Is")
+        self.todo = Todos(user=self.user1, status=TodoStatusTypes.objects.get_or_create(status_name='new')[0],
                           todo_text="my first todo item")
         self.todo.save()
 
@@ -18,6 +19,12 @@ class TestIndex(TestCase):
         response = self.client.get(reverse('todo:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('my first todo item', str(response.content))
+
+    def test_index_missing_todo(self):
+        self.client.login(username="email2@email.com", password="MyV0!c3Is")
+        response = self.client.get(reverse('todo:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn('class="todo"', str(response.content))
 
     def test_index_missing_login(self):
         response = self.client.get(reverse('todo:index'))
