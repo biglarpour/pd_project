@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Welcome, {{ user.username }}!</h2>
+    {% for todo in todos %}
+        <div class="todo">
+          <span class="closebtn"><a href="/{{ todo.id }}/remove_todo">&times;</a></span>
+            <strong>{{ todo.todo_text }}</strong>
+        </div>
+    {% endfor %}
+    <button class="open-button" onclick="openForm()">Add Todo</button>
+    <div class="form-popup" id="todoForm">
+      <form action='{% url "todo:add_todo" %}' method="post" class="form-container">
+        {% csrf_token %}
+        <h1>Add Todo Item</h1>
+
+        <input type="text" placeholder="Enter Todo Description" id="todo_text" name="todo_text" required>
+
+        <button type="submit" class="btn">Add Todo</button>
+        <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
+      </form>
+    </div>
+    <script>
+    function openForm() {
+      document.getElementById("todoForm").style.display = "block";
+    }
+
+    function closeForm() {
+      document.getElementById("todoForm").style.display = "none";
+    }
+    </script>
+{% endblock %}
