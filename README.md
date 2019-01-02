@@ -1,5 +1,6 @@
 # PD Project
-Todo App
+### Todo App
+Uses Django web application framework along with a postgres SQL relational database 
 
 * provides user sign up and login
 * provides a dashboard along with capability to add, remove, and view todo items 
